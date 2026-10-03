@@ -53,6 +53,7 @@ Money is stored as whole cents in the store's `currency`. Polymorphic columns st
 
 - [Laravel 13](https://laravel.com) (PHP 8.4+)
 - [Livewire 4](https://livewire.laravel.com) — class-based components: a PHP class in `app/Livewire`, with its Blade view in `resources/views/livewire`
+- [Alpine.js](https://alpinejs.dev) for small client-side interactions. It ships inside Livewire, so it isn't an npm dependency. Every layout loads it with `@livewireStyles` / `@livewireScripts`, including plain Blade pages like login.
 - [Laravel Fortify](https://laravel.com/docs/fortify) for authentication
 - [Tailwind CSS 4](https://tailwindcss.com) built with Vite
 - MySQL
