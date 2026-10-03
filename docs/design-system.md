@@ -32,7 +32,7 @@ Requires Tailwind CSS v4.
 
 ## Using the tokens
 
-Tailwind's default colours, radii, text sizes and shadows are removed, so only Gallery Row values exist. `bg-white`, `text-gray-500`, `rounded-lg` and `shadow-md` don't compile.
+Tailwind's default colours, radii, text sizes, shadows and blurs are removed, so only Gallery Row values exist. `bg-white`, `text-gray-500`, `rounded-lg`, `shadow-md`, `drop-shadow-md` and `blur-sm` don't compile.
 
 **Colour:** the page is `bone-cream` (set on `<html>` in the base styles, so layouts need no background class). Raised surfaces (cards, inputs, panels, popovers) are `bg-parchment`. Also `text-ink-black`, `text-charcoal` (muted text 24px+ only; 3.5:1 on the page), `border-pure-black`, `bg-accent`, `text-on-accent`.
 
@@ -41,6 +41,8 @@ Tailwind's default colours, radii, text sizes and shadows are removed, so only G
 **Order status:** `bg-status-paid-bg text-status-paid` (also `shipped`, `delayed`, `damaged`). These are aliases of success, info, warning and error.
 
 **Spacing:** 4px base. `p-4` = 16px, `gap-6` = 24px, `py-12` = 48px. Stick to the scale: 0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24.
+
+**Shadow:** one token, `shadow-card`: offset `8px 8px`, blur `16px`, ink-black at 30% opacity, falling down and to the right. Artwork cards only. Blur is allowed inside this shadow; there are no other shadows or drop shadows, and no blur filters (`blur-*`, `backdrop-blur-*`).
 
 **Radius:** `rounded-none` (default for cards and images), `rounded-xs` 4px, `rounded-sm` 8px, `rounded-md` 12px (the maximum), `rounded-full` (avatars only).
 
@@ -77,11 +79,11 @@ Build these as anonymous Blade components in `resources/views/components/` when 
 - **Order status tag:** `bg-status-{status}-bg text-status-{status}` with `rounded-xs`, always with a text label. Statuses: paid, shipped, delayed, damaged; awaiting payment uses `bg-parchment text-ink-black`. Write full class names (not interpolated) so Tailwind finds them.
 - **Alert / flash message:** `bg-{role}-bg border border-{role}`, title `type-body font-semibold text-{role}`, body `type-body-sm text-ink-black`, `rounded-xs`. Roles: success, warning, error, info. Write full class names per role.
 - **Banner:** Lobster Two `type-headline-*`, one or two words, stepping down a size on small screens.
-- **Artwork card:** `bg-parchment`, image bleeding to the edge with no radius, title `type-heading-5`, artist `type-body-sm italic`, optional NEW badge.
+- **Artwork card:** `bg-parchment shadow-card`, image bleeding to the edge with no radius, title `type-heading-5`, artist `type-body-sm italic`, optional NEW badge.
 
 ## Rules worth enforcing in review
 
 - Status colours only on order tables, order details and the store admin, and always with a text label.
-- No gradients, blur, or shadows (except the directional ink shadow on artwork cards, once defined).
+- No gradients, blur filters, or shadows. The one exception is `shadow-card` on artwork cards, which may be soft (blurred).
 - Body text flush left; never centre more than two lines.
 - Body, nav and small headings at weight 400; `font-semibold` / `font-bold` only for rare emphasis.

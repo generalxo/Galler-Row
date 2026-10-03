@@ -116,8 +116,19 @@
   --text-body: 17px;      --text-body--line-height: 1.33;      --text-body--letter-spacing: -0.01em;
   --text-body-sm: 16px;   --text-body-sm--line-height: 1.36;   --text-body-sm--letter-spacing: -0.01em;
 
-  /* No general-purpose shadows (guideline: depth from contrast). */
+  /* ---------------------------------------------------------------
+   * Shadow and blur. Depth comes from contrast, so Tailwind's shadow,
+   * drop-shadow, inset-shadow, text-shadow and blur scales are cleared.
+   * The one exception: the artwork card's directional ink shadow, offset
+   * down and to the right. Blur is allowed inside this shadow only; blur
+   * filters (blur-*, backdrop-blur-*) stay banned.
+   * ------------------------------------------------------------- */
   --shadow-*: initial;
+  --shadow-card: 8px 8px 16px 0 color-mix(in srgb, var(--color-ink-black) 30%, transparent);
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --text-shadow-*: initial;
+  --blur-*: initial;
 }
 
 /* -----------------------------------------------------------------

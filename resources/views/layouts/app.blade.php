@@ -24,5 +24,7 @@
         <main class="p-6">
             {{ $slot }}
         </main>
+
+        @livewireScripts
     </body>
 </html>
