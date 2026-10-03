@@ -1,0 +1,171 @@
+/*
+ * Gallery Row design system — Tailwind CSS v4 theme.
+ *
+ * Import this file right after Tailwind in resources/css/app.css:
+ *
+ *   @import 'tailwindcss';
+ *   @import './gallery-row.css';
+ *
+ * Tailwind's default colours, radii and text sizes are cleared on purpose,
+ * so only Gallery Row tokens exist as utilities (no white, no cool grays,
+ * no radius above 12px).
+ */
+
+@theme {
+  /* ---------------------------------------------------------------
+   * Colour
+   * ------------------------------------------------------------- */
+  --color-*: initial;
+
+  /* Surfaces and ink — fixed in every store */
+  --color-parchment: #e2dedb;   /* card surfaces, inputs, image mattes */
+  --color-bone-cream: #cdc6be;  /* page background */
+  --color-ink-black: #1d1d1b;   /* body text, nav, borders, banner fills */
+  --color-charcoal: #69645f;    /* muted text 24px+, subdued borders, icons (3.5:1 on bone-cream) */
+  --color-pure-black: #000000;  /* card outline emphasis, deepest fills */
+  --color-ember-orange: #c03f13; /* Gallery Row's own accent */
+
+  /* Store-overridable accent: a storefront wrapper sets --color-accent and
+   * --color-on-accent inline (#rrggbb only, validated) to apply store branding. */
+  --color-accent: #c03f13;      /* defaults to ember-orange */
+  --color-on-accent: #e2dedb;   /* defaults to parchment */
+
+  /* Feedback — alerts, flash messages, form validation, toasts.
+   * Text/icon/border colour + background. Always with a label or icon.
+   * success text is only 4.3:1 on the bone-cream page: put it on its
+   * -bg or on parchment, never straight on the page. */
+  --color-success: #3f5f32;
+  --color-success-bg: #d6dac9;
+  --color-warning: #704b00;
+  --color-warning-bg: #e3d5b8;
+  --color-error: #8a2626;
+  --color-error-bg: #e3cfc8;
+  --color-info: #34536b;
+  --color-info-bg: #d3d6d4;
+
+  /* Order status — aliases of the feedback colours.
+   * Order tables, order details and store admin only. */
+  --color-status-paid: var(--color-success);
+  --color-status-paid-bg: var(--color-success-bg);
+  --color-status-shipped: var(--color-info);
+  --color-status-shipped-bg: var(--color-info-bg);
+  --color-status-delayed: var(--color-warning);
+  --color-status-delayed-bg: var(--color-warning-bg);
+  --color-status-damaged: var(--color-error);
+  --color-status-damaged-bg: var(--color-error-bg);
+
+  /* ---------------------------------------------------------------
+   * Spacing — 4px base: p-1 = 4px, p-4 = 16px, p-24 = 96px.
+   * The scale in use: 0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24.
+   * ------------------------------------------------------------- */
+  --spacing: 4px;
+
+  /* ---------------------------------------------------------------
+   * Corner radius — capped at 12px. rounded-none and rounded-full
+   * are built in.
+   * ------------------------------------------------------------- */
+  --radius-*: initial;
+  --radius-xs: 4px;   /* NEW badges, tags, checkboxes */
+  --radius-sm: 8px;   /* buttons, inputs, selects */
+  --radius-md: 12px;  /* dropdowns, popovers — the maximum */
+
+  /* ---------------------------------------------------------------
+   * Font families
+   * ------------------------------------------------------------- */
+  --font-*: initial;
+  --font-display: "Lobster Two", Georgia, serif;
+  --font-editorial: "Playfair Display", Georgia, "Times New Roman", serif;
+
+  /* ---------------------------------------------------------------
+   * Type scale. Each text-* sets size, line height and tracking.
+   * Pair headline-* with font-display, the rest with font-editorial
+   * (or use the type-* utilities below, which set the family too).
+   * ------------------------------------------------------------- */
+  --text-*: initial;
+
+  /* Headlines — Lobster Two */
+  --text-headline-533: 533px; --text-headline-533--line-height: 0.71; --text-headline-533--letter-spacing: -0.089em;
+  --text-headline-446: 446px; --text-headline-446--line-height: 0.73; --text-headline-446--letter-spacing: -0.085em;
+  --text-headline-432: 432px; --text-headline-432--line-height: 0.73; --text-headline-432--letter-spacing: -0.08em;
+  --text-headline-366: 366px; --text-headline-366--line-height: 0.77; --text-headline-366--letter-spacing: -0.075em;
+  --text-headline-212: 212px; --text-headline-212--line-height: 0.78; --text-headline-212--letter-spacing: -0.065em;
+  --text-headline-202: 202px; --text-headline-202--line-height: 0.78; --text-headline-202--letter-spacing: -0.06em;
+  --text-headline-122: 122px; --text-headline-122--line-height: 0.79; --text-headline-122--letter-spacing: -0.05em;
+  --text-headline-118: 118px; --text-headline-118--line-height: 0.79; --text-headline-118--letter-spacing: -0.048em;
+  --text-headline-112: 112px; --text-headline-112--line-height: 0.81; --text-headline-112--letter-spacing: -0.045em;
+  --text-headline-109: 109px; --text-headline-109--line-height: 0.81; --text-headline-109--letter-spacing: -0.043em;
+  --text-headline-86: 86px;   --text-headline-86--line-height: 0.91;  --text-headline-86--letter-spacing: -0.035em;
+  --text-headline-72: 72px;   --text-headline-72--line-height: 0.91;  --text-headline-72--letter-spacing: -0.03em;
+  --text-headline-65: 65px;   --text-headline-65--line-height: 0.91;  --text-headline-65--letter-spacing: -0.028em;
+  --text-headline-43: 43px;   --text-headline-43--line-height: 1;     --text-headline-43--letter-spacing: -0.02em;
+  --text-headline-32: 32px;   --text-headline-32--line-height: 1;     --text-headline-32--letter-spacing: -0.015em;
+  --text-headline-23: 23px;   --text-headline-23--line-height: 1.25;  --text-headline-23--letter-spacing: -0.01em;
+  --text-headline-22: 22px;   --text-headline-22--line-height: 1.25;  --text-headline-22--letter-spacing: -0.01em;
+  --text-headline-20: 20px;   --text-headline-20--line-height: 1.25;  --text-headline-20--letter-spacing: -0.008em;
+  --text-headline-17: 17px;   --text-headline-17--line-height: 1.25;  --text-headline-17--letter-spacing: -0.007em;
+
+  /* Editorial — Playfair Display */
+  --text-statement: 86px; --text-statement--line-height: 0.93; --text-statement--letter-spacing: -0.04em;
+  --text-heading-1: 37px; --text-heading-1--line-height: 1.08; --text-heading-1--letter-spacing: -0.03em;
+  --text-heading-2: 32px; --text-heading-2--line-height: 1.11; --text-heading-2--letter-spacing: -0.025em;
+  --text-heading-3: 31px; --text-heading-3--line-height: 1.15; --text-heading-3--letter-spacing: -0.025em;
+  --text-heading-4: 29px; --text-heading-4--line-height: 1.16; --text-heading-4--letter-spacing: -0.02em;
+  --text-heading-5: 24px; --text-heading-5--line-height: 1.18; --text-heading-5--letter-spacing: -0.02em;
+  --text-lead: 20px;      --text-lead--line-height: 1.2;       --text-lead--letter-spacing: -0.015em;
+  --text-body-lg: 19px;   --text-body-lg--line-height: 1.25;   --text-body-lg--letter-spacing: -0.012em;
+  --text-body: 17px;      --text-body--line-height: 1.33;      --text-body--letter-spacing: -0.01em;
+  --text-body-sm: 16px;   --text-body-sm--line-height: 1.36;   --text-body-sm--letter-spacing: -0.01em;
+
+  /* No general-purpose shadows (guideline: depth from contrast). */
+  --shadow-*: initial;
+}
+
+/* -----------------------------------------------------------------
+ * type-* utilities: family + size + line height + tracking in one.
+ * Usage: <h1 class="type-headline-212">New arrivals</h1>
+ * --------------------------------------------------------------- */
+@utility type-headline-* {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: --value(--text-headline-*);
+  line-height: --value(--text-headline-*--line-height);
+  letter-spacing: --value(--text-headline-*--letter-spacing);
+}
+
+@utility type-statement { font-family: var(--font-editorial); font-weight: 400; font-size: var(--text-statement); line-height: var(--text-statement--line-height); letter-spacing: var(--text-statement--letter-spacing); }
+@utility type-heading-* {
+  font-family: var(--font-editorial);
+  font-weight: 400;
+  font-size: --value(--text-heading-*);
+  line-height: --value(--text-heading-*--line-height);
+  letter-spacing: --value(--text-heading-*--letter-spacing);
+}
+@utility type-lead    { font-family: var(--font-editorial); font-weight: 400; font-size: var(--text-lead); line-height: var(--text-lead--line-height); letter-spacing: var(--text-lead--letter-spacing); }
+@utility type-body-lg { font-family: var(--font-editorial); font-weight: 400; font-size: var(--text-body-lg); line-height: var(--text-body-lg--line-height); letter-spacing: var(--text-body-lg--letter-spacing); }
+@utility type-body    { font-family: var(--font-editorial); font-weight: 400; font-size: var(--text-body); line-height: var(--text-body--line-height); letter-spacing: var(--text-body--letter-spacing); }
+@utility type-body-sm { font-family: var(--font-editorial); font-weight: 400; font-size: var(--text-body-sm); line-height: var(--text-body-sm--line-height); letter-spacing: var(--text-body-sm--letter-spacing); }
+
+/* -----------------------------------------------------------------
+ * Base: bone-cream page, ink text, Playfair Display body.
+ * --------------------------------------------------------------- */
+@layer base {
+  html {
+    background-color: var(--color-bone-cream);
+    color: var(--color-ink-black);
+    font-family: var(--font-editorial);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    letter-spacing: var(--text-body--letter-spacing);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-ink-black);
+    color: var(--color-parchment);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ink-black);
+    outline-offset: 2px;
+  }
+}

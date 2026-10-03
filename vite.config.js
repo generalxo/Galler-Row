@@ -12,12 +12,14 @@ export default defineConfig({
             ],
             refresh: true,
             fonts: [
-                google('Poppins', {
-                    weights: [100, 200, 300, 400, 500, 600, 700, 800, 900],
+                google('Lobster Two', {
+                    preload: [{ weight: 400 }],
+                }),
+                google('Playfair Display', {
+                    weights: [400, 600, 700],
                     styles: ['normal', 'italic'],
                     preload: [{ weight: 400 }],
                 }),
-                google('Limelight'),
             ],
         }),
         tailwindcss(),

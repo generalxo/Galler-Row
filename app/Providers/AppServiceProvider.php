@@ -2,7 +2,14 @@
 
 namespace App\Providers;
 
+use App\Enums\ArtworkType;
+use App\Models\Artist;
+use App\Models\Artwork;
+use App\Models\Store;
+use App\Models\User;
+use App\Support\CurrentStore;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -15,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->scoped(CurrentStore::class);
     }
 
     /**
@@ -24,6 +31,21 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->configureMorphMap();
+    }
+
+    /**
+     * Store short, stable keys in polymorphic type columns instead of class names.
+     */
+    protected function configureMorphMap(): void
+    {
+        Relation::enforceMorphMap([
+            ...ArtworkType::morphMap(),
+            'artwork' => Artwork::class,
+            'artist' => Artist::class,
+            'store' => Store::class,
+            'user' => User::class,
+        ]);
     }
 
     /**

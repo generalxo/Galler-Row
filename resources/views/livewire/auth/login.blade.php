@@ -10,7 +10,7 @@
 
             <!-- Email Address -->
             <div class="grid gap-2">
-                <label for="email" class="text-sm font-medium">{{ __('Email address') }}</label>
+                <label for="email" class="type-body">{{ __('Email address') }}</label>
                 <input
                     id="email"
                     name="email"
@@ -20,16 +20,20 @@
                     autofocus
                     autocomplete="email"
                     placeholder="email@example.com"
-                    class="rounded-md border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white"
+                    @class([
+                        'type-body rounded-sm border bg-parchment px-3 py-2',
+                        'border-error' => $errors->has('email'),
+                        'border-ink-black' => ! $errors->has('email'),
+                    ])
                 />
                 @error('email')
-                    <p class="text-sm text-red-500">{{ $message }}</p>
+                    <p class="type-body-sm text-error">{{ $message }}</p>
                 @enderror
             </div>
 
             <!-- Password -->
             <div class="grid gap-2">
-                <label for="password" class="text-sm font-medium">{{ __('Password') }}</label>
+                <label for="password" class="type-body">{{ __('Password') }}</label>
                 <input
                     id="password"
                     name="password"
@@ -37,20 +41,24 @@
                     required
                     autocomplete="current-password"
                     placeholder="{{ __('Password') }}"
-                    class="rounded-md border border-neutral-700 bg-neutral-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-white"
+                    @class([
+                        'type-body rounded-sm border bg-parchment px-3 py-2',
+                        'border-error' => $errors->has('password'),
+                        'border-ink-black' => ! $errors->has('password'),
+                    ])
                 />
                 @error('password')
-                    <p class="text-sm text-red-500">{{ $message }}</p>
+                    <p class="type-body-sm text-error">{{ $message }}</p>
                 @enderror
             </div>
 
             <!-- Remember Me -->
-            <label class="flex items-center gap-2 text-sm">
-                <input type="checkbox" name="remember" @checked(old('remember')) class="size-4 rounded border-neutral-700" />
+            <label class="type-body flex items-center gap-2">
+                <input type="checkbox" name="remember" @checked(old('remember')) class="size-4 rounded-xs border-ink-black" />
                 {{ __('Remember me') }}
             </label>
 
-            <button type="submit" class="w-full cursor-pointer rounded-md bg-white px-4 py-2 text-sm font-medium text-neutral-900 hover:bg-neutral-200" data-test="login-button">
+            <button type="submit" class="type-body w-full cursor-pointer rounded-sm bg-ink-black px-4 py-2 text-parchment hover:bg-pure-black" data-test="login-button">
                 {{ __('Log in') }}
             </button>
         </form>
