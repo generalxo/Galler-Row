@@ -51,7 +51,7 @@ Money is stored as whole cents in the store's `currency`. Polymorphic columns st
 
 ## Tech stack
 
-- [Laravel 13](https://laravel.com) (PHP 8.3+)
+- [Laravel 13](https://laravel.com) (PHP 8.4+)
 - [Livewire 4](https://livewire.laravel.com) — class-based components: a PHP class in `app/Livewire`, with its Blade view in `resources/views/livewire`
 - [Laravel Fortify](https://laravel.com/docs/fortify) for authentication
 - [Tailwind CSS 4](https://tailwindcss.com) built with Vite
@@ -59,7 +59,7 @@ Money is stored as whole cents in the store's `currency`. Polymorphic columns st
 
 ## Getting started
 
-Requirements: PHP 8.3+, Composer, Node.js and a running MySQL server.
+Requirements: PHP 8.4+, Composer, Node.js and a running MySQL server.
 
 ```bash
 composer install
@@ -97,4 +97,4 @@ Runs code style checks (Pint), static analysis (PHPStan) and the PHPUnit test su
 - **Playfair Display** — default font for all text (`font-editorial`, `type-heading-*`, `type-body*`)
 - **Lobster Two** — display font for banners and headlines (`font-display`, `type-headline-*`)
 
-Both are Google Fonts, downloaded at build time and served from the app itself (configured in `vite.config.js`), so pages make no requests to Google.
+Both are Google Fonts, downloaded at build time and served from the app itself (configured in `vite.config.js`), so pages make no requests to Google. See `docs/design-system.md` for the full Gallery Row design system.
