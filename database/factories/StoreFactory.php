@@ -26,6 +26,7 @@ class StoreFactory extends Factory
         return [
             'name' => $name,
             'slug' => Str::slug($name),
+            'domain' => null,
             'description' => fake()->paragraph(),
             'status' => StoreStatus::Active,
             'currency' => 'EUR',
