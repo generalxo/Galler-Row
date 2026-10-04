@@ -2,7 +2,7 @@
 
 Every store runs on its own host, so local development uses `gallery-row.test` and its subdomains instead of `localhost`. These hosts only resolve once they're in your hosts file (see [Editing the hosts file](../README.md#editing-the-hosts-file) in the README).
 
-The root domain comes from `TENANCY_ROOT_DOMAIN` in `.env` (default `gallery-row.test`). `composer dev` serves on port 8000.
+The root domain comes from `TENANCY_ROOT_DOMAIN` in `.env` (default `gallery-row.test`). `composer dev` serves on port 8000. How hosts map to stores is explained in [tenancy.md](tenancy.md).
 
 ## Addresses
 
@@ -14,6 +14,8 @@ The root domain comes from `TENANCY_ROOT_DOMAIN` in `.env` (default `gallery-row
 | http://studio-vermeer.gallery-row.test:8000 | Studio Vermeer |
 | http://clay-and-kiln.gallery-row.test:8000 | Clay & Kiln |
 | http://clayandkiln.test:8000 | Clay & Kiln, on its custom domain |
+
+Every store host serves the same [storefront pages](storefront.md): `/`, `/artworks`, `/artworks/{slug}`, `/collections`, `/collections/{slug}`, `/artists` and `/artists/{slug}`. The platform also has `/open-a-store`.
 
 Any other subdomain, a reserved subdomain such as `admin.` (list in `config/tenancy.php`), or a store that isn't `active` returns a 404.
 

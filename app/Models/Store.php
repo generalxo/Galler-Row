@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\StoreRole;
 use App\Enums\StoreStatus;
+use App\Support\Color;
 use Database\Factories\StoreFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,13 +25,15 @@ use Illuminate\Support\Carbon;
  * @property string|null $description
  * @property StoreStatus $status
  * @property string $currency
+ * @property string|null $accent_color
+ * @property string|null $on_accent_color
  * @property string|null $contact_email
  * @property array<string, mixed>|null $settings
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  */
-#[Fillable(['name', 'slug', 'domain', 'description', 'status', 'currency', 'contact_email', 'settings'])]
+#[Fillable(['name', 'slug', 'domain', 'description', 'status', 'currency', 'accent_color', 'on_accent_color', 'contact_email', 'settings'])]
 class Store extends Model
 {
     /** @use HasFactory<StoreFactory> */
@@ -154,6 +157,20 @@ class Store extends Model
         $host = $this->domain ?? $this->slug.'.'.config('tenancy.root_domain');
 
         return $scheme.'://'.$host.($port ? ":{$port}" : '').'/'.ltrim($path, '/');
+    }
+
+    /**
+     * Inline CSS that applies the store's accent to everything inside the
+     * storefront. Null (keep Gallery Row's default) unless both colours are
+     * plain #rrggbb values, so nothing else can reach the style attribute.
+     */
+    public function accentStyle(): ?string
+    {
+        if (! Color::isHex($this->accent_color) || ! Color::isHex($this->on_accent_color)) {
+            return null;
+        }
+
+        return "--color-accent: {$this->accent_color}; --color-on-accent: {$this->on_accent_color};";
     }
 
     public function isActive(): bool

@@ -58,9 +58,7 @@
                 {{ __('Remember me') }}
             </label>
 
-            <button type="submit" class="type-body w-full cursor-pointer rounded-sm bg-ink-black px-4 py-2 text-parchment hover:bg-pure-black" data-test="login-button">
-                {{ __('Log in') }}
-            </button>
+            <x-button type="submit" class="w-full" data-test="login-button">{{ __('Log in') }}</x-button>
         </form>
     </div>
 </x-layouts::auth>

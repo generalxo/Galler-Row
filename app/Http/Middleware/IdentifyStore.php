@@ -6,7 +6,6 @@ use App\Models\Store;
 use App\Support\CurrentStore;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -42,7 +41,6 @@ class IdentifyStore
         abort_if($store === null || ! $store->isActive(), 404);
 
         $this->currentStore->set($store);
-        View::share('currentStore', $store);
 
         return $next($request);
     }

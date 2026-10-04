@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ArtworkStatus;
 use App\Enums\ArtworkType;
 use App\Enums\StoreRole;
 use App\Models\Artist;
@@ -41,12 +42,14 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Northlight Gallery',
                 'slug' => 'northlight',
                 'description' => 'Landscapes and seascapes from painters working along the northern coast, in oil, watercolour and print.',
+                'accent' => '#1f4e6e',
                 'owner' => 'owner@northlight.test',
             ],
             [
                 'name' => 'Studio Vermeer',
                 'slug' => 'studio-vermeer',
                 'description' => 'Quiet interiors and still lifes in the Dutch tradition, plus limited-edition giclée prints.',
+                'accent' => '#2b3f8f',
                 'owner' => 'owner@vermeer.test',
             ],
             [
@@ -55,6 +58,7 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'clay-and-kiln',
                 'domain' => 'clayandkiln.test',
                 'description' => 'Hand-thrown stoneware and small sculpture, fired in a wood kiln and finished one piece at a time.',
+                'accent' => '#4a5d32',
                 'owner' => 'owner@claykiln.test',
             ],
         ];
@@ -65,6 +69,9 @@ class DatabaseSeeder extends Seeder
                 'slug' => $data['slug'],
                 'domain' => $data['domain'] ?? null,
                 'description' => $data['description'],
+                'accent_color' => $data['accent'],
+                'on_accent_color' => '#e2dedb',
+                'contact_email' => "hello@{$data['slug']}.test",
             ]);
 
             $store->members()->attach(
@@ -96,6 +103,18 @@ class DatabaseSeeder extends Seeder
 
     protected function seedCatalogue(Store $store, User $customer): void
     {
+        $catalogue = new ArtworkCatalogueSeeder;
+
+        if ($catalogue->hasCatalogue($store)) {
+            $artworks = collect($catalogue->seed($store));
+            $sold = $artworks->firstWhere('status', ArtworkStatus::Sold) ?? $artworks->first();
+
+            $this->seedOrder($store, $customer, $sold);
+
+            return;
+        }
+
+        // No downloaded catalogue: fall back to generated artwork.
         $artists = Artist::factory()->count(3)->for($store)->create();
         $collections = Collection::factory()->count(2)->for($store)->create();
         $collections->first()?->update(['is_featured' => true]);
@@ -135,6 +154,11 @@ class DatabaseSeeder extends Seeder
 
         $sold = Artwork::factory()->painting()->byArtist($artists->first())->sold()->create();
 
+        $this->seedOrder($store, $customer, $sold);
+    }
+
+    protected function seedOrder(Store $store, User $customer, Artwork $sold): void
+    {
         $order = Order::factory()->for($store)->for($customer)->create([
             'subtotal' => $sold->price,
             'total' => $sold->price + 1500,

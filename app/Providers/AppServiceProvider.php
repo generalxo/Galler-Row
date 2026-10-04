@@ -12,6 +12,7 @@ use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -32,6 +33,17 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
         $this->configureMorphMap();
+        $this->shareCurrentStore();
+    }
+
+    /**
+     * Give the storefront layout and pages the current store as `$currentStore`.
+     */
+    protected function shareCurrentStore(): void
+    {
+        View::composer(['layouts::store', 'livewire.storefront.*'], function ($view): void {
+            $view->with('currentStore', $this->app->make(CurrentStore::class)->get());
+        });
     }
 
     /**

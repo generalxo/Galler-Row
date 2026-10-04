@@ -43,4 +43,13 @@ class Image extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * Public URL of the file on the `public` disk. Relative to the current
+     * host, so images load from the store's own address, not APP_URL.
+     */
+    public function url(): string
+    {
+        return asset('storage/'.$this->path);
+    }
 }

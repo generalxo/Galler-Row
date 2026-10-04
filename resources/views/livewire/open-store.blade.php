@@ -25,9 +25,7 @@
             <p class="type-body mt-4">
                 We're holding <span class="font-semibold">{{ $subdomain }}.{{ $rootDomain }}</span> for you until then.
             </p>
-            <a href="{{ route('home') }}" class="type-body mt-8 inline-block rounded-sm bg-ink-black px-5 py-3 text-parchment hover:bg-pure-black">
-                Back to Gallery Row
-            </a>
+            <x-button :href="route('home')" class="mt-8">Back to Gallery Row</x-button>
         </section>
     @else
         <form wire:submit="submit" class="flex flex-col gap-6 rounded-sm bg-parchment p-6 md:p-8" novalidate>
@@ -119,10 +117,10 @@
                 @enderror
             </div>
 
-            <button type="submit" wire:loading.attr="disabled" class="type-body cursor-pointer self-start rounded-sm bg-ink-black px-5 py-3 text-parchment hover:bg-pure-black disabled:cursor-wait">
+            <x-button type="submit" wire:loading.attr="disabled" class="self-start disabled:cursor-wait">
                 <span wire:loading.remove wire:target="submit">Send application</span>
                 <span wire:loading wire:target="submit">Sending…</span>
-            </button>
+            </x-button>
         </form>
     @endif
 </div>

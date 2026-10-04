@@ -10,14 +10,10 @@
             @auth
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="type-body cursor-pointer rounded-sm px-3 py-2 hover:bg-parchment" data-test="logout-button">
-                        {{ __('Log out') }}
-                    </button>
+                    <x-button type="submit" variant="ghost" size="sm" data-test="logout-button">{{ __('Log out') }}</x-button>
                 </form>
             @else
-                <a href="{{ route('login') }}" class="type-body rounded-sm px-3 py-2 hover:bg-parchment">
-                    {{ __('Log in') }}
-                </a>
+                <x-button :href="route('login')" variant="ghost" size="sm">{{ __('Log in') }}</x-button>
             @endauth
         </header>
 

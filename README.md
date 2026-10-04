@@ -15,54 +15,28 @@ Think of a street lined with galleries — each with its own storefront, but all
 
 ## Current status
 
-Early stage. The project has been stripped back to a clean base:
+Early stage, built in phases (see the [roadmap](docs/roadmap.md)). Working now:
 
-- Login and logout (no registration yet)
-- A public home page on the root domain with the Gallery Row banner
-- Store routing: every store on its own subdomain or custom domain (see below), with a placeholder storefront page
-- The core data model: stores, roles, artwork, orders (see below)
+- **Platform site** on the root domain: a marketing page, and an "Open your store" form that saves store applications
+- **Store routing:** every store on its own subdomain or custom domain, with tenant data kept apart ([tenancy](docs/tenancy.md))
+- **Public storefronts:** artworks with filters, a detail page per artwork, collections and artists, each store in its own accent colour ([storefront](docs/storefront.md))
+- **Demo catalogue:** 74 real public-domain artworks from the Art Institute of Chicago ([artwork catalogue](docs/artwork-catalogue.md))
+- **Base components**, starting with `<x-button>` ([design system](docs/design-system.md))
+- **Login and logout** (no registration yet)
 
-Storefront catalogue pages and checkout are not built yet.
+The store back office, cart and checkout are not built yet.
 
-## Store routing
+## Documentation
 
-Each store is served on its own host. `App\Http\Middleware\IdentifyStore` runs on every web request (including Livewire updates) and sets `CurrentStore` from the host:
-
-| Host | Serves |
-|---|---|
-| `gallery-row.com` (`TENANCY_ROOT_DOMAIN`) | the platform site, no store |
-| `www.gallery-row.com` | 301 to the root domain |
-| `{slug}.gallery-row.com` | the store with that `slug` |
-| any other host | the store with that custom `domain` |
-
-Unknown hosts, reserved subdomains (`config/tenancy.php`) and stores that aren't `active` get a 404. Sessions are per host, so logging in on one store doesn't log you in on another. Outside a request (mail, jobs), build store links with `$store->url('/path')`.
-
-## Data model
-
-All tenants share one database. Tenant tables carry a `store_id`, and the `BelongsToStore` trait (`app/Models/Concerns`) scopes queries to the active store held in `App\Support\CurrentStore`. With no active store set (admin, console, seeders), every row is visible.
-
-| Model | Purpose |
-|---|---|
-| `User` | Platform account. Anyone can shop. `is_admin` marks a platform admin. |
-| `Store` | The tenant: one artist's or gallery's shop. Served at `{slug}.` the root domain, or at its optional custom `domain`. |
-| `StoreApplication` | A request to open a store, sent from the "Open your store" form on the platform site. Not tenant data. `pending` until a platform admin approves or rejects it. |
-| `StoreMembership` | `store_user` pivot holding a user's role in a store: `owner` or `staff`. |
-| `Artist` | An artist whose work a store sells. |
-| `Collection` | A curated group of artworks within a store. |
-| `Artwork` | The shared columns of every piece: title, price, stock, status. |
-| `PaintingDetail`, `PrintDetail`, `PhotographDetail`, `SculptureDetail`, `DigitalDetail` | Type-specific columns, linked by the polymorphic `artworkable` relation. |
-| `ArtworkVariant` | Purchasable options of an edition, such as size or framing. |
-| `Image` | Polymorphic images for artworks, stores and artists. |
-| `Order`, `OrderItem` | A purchase from one store. Items keep a snapshot of the title and price. |
-
-Inventory rules:
-
-- `is_original` is set explicitly. It is never worked out from stock, so an edition with one print left is still an edition.
-- An original has at most 1 in stock and no `edition_size`.
-- An edition must have an `edition_size`, and its stock can't be larger than that.
-- Saving an artwork that breaks these rules throws `InvalidArtworkInventory`.
-
-Money is stored as whole cents in the store's `currency`. Polymorphic columns store short keys such as `painting` or `artwork` (see `AppServiceProvider`).
+| Page | What it covers |
+| --- | --- |
+| [Roadmap](docs/roadmap.md) | What's done and what comes next |
+| [Tenancy and store routing](docs/tenancy.md) | How a host maps to a store, scoping, sessions, custom domains, platform vs storefront vs back office |
+| [Data model](docs/data-model.md) | Models, artwork status, inventory rules, money |
+| [Storefront](docs/storefront.md) | Store pages, filters, the artwork detail page, store accent colours |
+| [Artwork catalogue](docs/artwork-catalogue.md) | Where the demo art comes from, how it was picked and downloaded, licence, how it's seeded |
+| [Design system](docs/design-system.md) | Colours, type, spacing, the `<x-button>` component, design rules |
+| [Local domains](docs/local-domains.md) | Every local address and demo login |
 
 ## Tech stack
 
@@ -90,15 +64,18 @@ Edit the `DB_*` values in `.env` to match your MySQL server and create the datab
 Stores run on subdomains of `gallery-row.test`, so add the demo hosts to your hosts file first (see [Editing the hosts file](#editing-the-hosts-file) below). Then run:
 
 ```bash
+php artisan storage:link
 php artisan migrate --seed
 composer dev
 ```
+
+`storage:link` makes the seeded artwork images (on the `public` disk) reachable under `/storage`.
 
 The platform runs at http://gallery-row.test:8000 and the demo stores at http://northlight.gallery-row.test:8000, http://studio-vermeer.gallery-row.test:8000 and http://clay-and-kiln.gallery-row.test:8000 (Clay & Kiln also at its custom domain, http://clayandkiln.test:8000). [docs/local-domains.md](docs/local-domains.md) lists every address and login. The seeder creates these users, all with the password `password`:
 
 - `test@example.com`: a customer with one order
 - `admin@example.com`: platform admin
-- `owner@northlight.test`, `owner@vermeer.test`, `owner@claykiln.test`: owners of the three demo stores. Each store also gets artists, collections and artwork of every type.
+- `owner@northlight.test`, `owner@vermeer.test`, `owner@claykiln.test`: owners of the three demo stores. Each store's catalogue comes from the [artwork catalogue](docs/artwork-catalogue.md).
 
 > After changing `.env`, restart `composer dev` — the running server keeps the values it started with.
 
@@ -133,7 +110,11 @@ Runs code style checks (Pint), static analysis (PHPStan) and the PHPUnit test su
 
 ## Fonts
 
-- **Playfair Display** — default font for all text (`font-editorial`, `type-heading-*`, `type-body*`)
-- **Lobster Two** — display font for banners and headlines (`font-display`, `type-headline-*`)
+- **Playfair Display**: default font for all text (`font-editorial`, `type-heading-*`, `type-body*`)
+- **Lobster Two**: display font for banners and headlines (`font-display`, `type-headline-*`)
 
-Both are Google Fonts, downloaded at build time and served from the app itself (configured in `vite.config.js`), so pages make no requests to Google. See `docs/design-system.md` for the full Gallery Row design system.
+Both are Google Fonts, downloaded at build time and served from the app itself (configured in `vite.config.js`), so pages make no requests to Google.
+
+## Credits
+
+Artwork images and data: [Art Institute of Chicago](https://www.artic.edu/), released under [CC0](https://creativecommons.org/publicdomain/zero/1.0/). Prices and stock are made up, nothing is for sale, and Gallery Row isn't affiliated with or endorsed by the museum. Details in [docs/artwork-catalogue.md](docs/artwork-catalogue.md).

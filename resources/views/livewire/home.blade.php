@@ -11,9 +11,7 @@
             </p>
 
             <div class="mt-8 flex flex-wrap items-center gap-6">
-                <a href="{{ route('stores.create') }}" class="type-body rounded-sm bg-ink-black px-5 py-3 text-parchment hover:bg-pure-black">
-                    Open your store
-                </a>
+                <x-button :href="route('stores.create')">Open your store</x-button>
                 <a href="#the-row" class="type-body underline underline-offset-4 hover:no-underline">
                     Walk the row
                 </a>
@@ -109,9 +107,7 @@
         <div class="mx-auto max-w-6xl">
             <h2 id="closing-heading" class="type-headline-65 md:type-headline-86">Your wall is waiting.</h2>
             <p class="type-lead mt-6 max-w-2xl">There's room on the row. Open your store and hang your first piece.</p>
-            <a href="{{ route('stores.create') }}" class="type-body mt-8 inline-block rounded-sm bg-parchment px-5 py-3 text-ink-black hover:bg-bone-cream focus-visible:outline-parchment">
-                Open your store
-            </a>
+            <x-button :href="route('stores.create')" color="parchment" class="mt-8 focus-visible:outline-parchment">Open your store</x-button>
         </div>
     </section>
 </div>

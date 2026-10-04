@@ -71,9 +71,40 @@ Override the two CSS variables on the storefront's wrapper element; everything i
 
 Only output values that match `#rrggbb` (validate on save and when rendering); otherwise leave the variables unset so Ember Orange on Parchment applies. Validate a store's accent on save: it should reach at least 3:1 against the bone-cream page (`#cdc6be`) and against its on-accent colour. Ember Orange itself is 3.1:1 on bone-cream, so it only just passes.
 
-## Components (not built yet)
+## Components
 
-Build these as anonymous Blade components in `resources/views/components/` when they're needed, using only the tokens above:
+Anonymous Blade components in `resources/views/components/`, using only the tokens above.
+
+### Button (`<x-button>`)
+
+Use it for every button and every link styled as a button. Plain text links stay `<a>`.
+
+```blade
+<x-button>Save</x-button>                                    {{-- <button type="button">, md, ink, solid --}}
+<x-button type="submit" class="w-full">Log in</x-button>
+<x-button :href="route('stores.create')">Open your store</x-button>  {{-- renders <a> --}}
+<x-button color="accent">Browse all artworks</x-button>
+<x-button color="#1f4e6e">Custom colour</x-button>
+<x-button variant="ghost" size="sm">Log out</x-button>
+```
+
+| Prop | Values |
+| --- | --- |
+| `size` | `sm` (17px, `px-3 py-1.5`), `md` default (17px, `px-5 py-3`), `lg` (`type-lead`, `px-7 py-4`) |
+| `color` | `ink` default, `parchment` (for dark surfaces), `accent` (store colour), `danger` (destructive actions), or a `#rrggbb` hex |
+| `variant` | `solid` default, `outline` (border in the colour), `ghost` (text only, parchment on hover) |
+| `text-color` | `#rrggbb`, custom hex only. Without it the text is ink-black or parchment, whichever contrasts more with the background. |
+| `href` | Renders an `<a>` instead of a `<button>` |
+
+Every other attribute (`wire:*`, `data-test`, `class`, `disabled`) is passed through.
+
+- Solid `accent` buttons use `type-body-lg font-semibold` at `sm` and `md`, because on-accent text on Ember Orange is only 4.0:1.
+- `outline` and `ghost` always use ink-black text, so they stay readable on bone-cream and parchment whatever the colour.
+- A custom colour that isn't a plain `#rrggbb` value falls back to `ink`, so nothing else reaches the `style` attribute. `App\Support\Color` holds the hex check and contrast maths.
+
+### Not built yet
+
+Build these when they're needed:
 
 - **NEW badge:** `bg-accent text-on-accent rounded-xs`, label `type-body-lg font-semibold` (on-accent text on Ember Orange is only 4.0:1, so it must be 19px semibold or larger).
 - **Order status tag:** `bg-status-{status}-bg text-status-{status}` with `rounded-xs`, always with a text label. Statuses: paid, shipped, delayed, damaged; awaiting payment uses `bg-parchment text-ink-black`. Write full class names (not interpolated) so Tailwind finds them.

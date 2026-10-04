@@ -170,6 +170,18 @@ class Artwork extends Model
     }
 
     /**
+     * What visitors see in a storefront: published work, plus sold work kept
+     * on show. Drafts and archived work stay hidden.
+     *
+     * @param  Builder<Artwork>  $query
+     */
+    #[Scope]
+    protected function onDisplay(Builder $query): void
+    {
+        $query->whereIn('status', [ArtworkStatus::Published, ArtworkStatus::Sold]);
+    }
+
+    /**
      * @param  Builder<Artwork>  $query
      */
     #[Scope]
@@ -203,6 +215,14 @@ class Artwork extends Model
     protected function ofType(Builder $query, ArtworkType $type): void
     {
         $query->where('artworkable_type', $type->value);
+    }
+
+    /**
+     * Whether nothing is left to buy: marked sold, or the last copy has gone.
+     */
+    public function isSoldOut(): bool
+    {
+        return $this->status === ArtworkStatus::Sold || $this->quantity === 0;
     }
 
     /**
