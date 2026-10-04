@@ -12,6 +12,7 @@ use App\Models\Image;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Store;
+use App\Models\StoreApplication;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -36,15 +37,34 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $stores = [
-            ['name' => 'Northlight Gallery', 'slug' => 'northlight', 'owner' => 'owner@northlight.test'],
-            ['name' => 'Studio Vermeer', 'slug' => 'studio-vermeer', 'owner' => 'owner@vermeer.test'],
-            ['name' => 'Clay & Kiln', 'slug' => 'clay-and-kiln', 'owner' => 'owner@claykiln.test'],
+            [
+                'name' => 'Northlight Gallery',
+                'slug' => 'northlight',
+                'description' => 'Landscapes and seascapes from painters working along the northern coast, in oil, watercolour and print.',
+                'owner' => 'owner@northlight.test',
+            ],
+            [
+                'name' => 'Studio Vermeer',
+                'slug' => 'studio-vermeer',
+                'description' => 'Quiet interiors and still lifes in the Dutch tradition, plus limited-edition giclée prints.',
+                'owner' => 'owner@vermeer.test',
+            ],
+            [
+                // Also reachable on its own custom domain.
+                'name' => 'Clay & Kiln',
+                'slug' => 'clay-and-kiln',
+                'domain' => 'clayandkiln.test',
+                'description' => 'Hand-thrown stoneware and small sculpture, fired in a wood kiln and finished one piece at a time.',
+                'owner' => 'owner@claykiln.test',
+            ],
         ];
 
         foreach ($stores as $data) {
             $store = Store::factory()->create([
                 'name' => $data['name'],
                 'slug' => $data['slug'],
+                'domain' => $data['domain'] ?? null,
+                'description' => $data['description'],
             ]);
 
             $store->members()->attach(
@@ -55,6 +75,23 @@ class DatabaseSeeder extends Seeder
 
             $this->seedCatalogue($store, $customer);
         }
+
+        // Waiting for a platform admin to review.
+        StoreApplication::factory()->create([
+            'name' => 'Ines Albrecht',
+            'email' => 'ines@example.com',
+            'store_name' => 'Paper Moon Press',
+            'subdomain' => 'paper-moon-press',
+            'message' => 'Risograph and letterpress prints in small editions, mostly botanical studies.',
+        ]);
+        StoreApplication::factory()->create([
+            'name' => 'Tomás Reyes',
+            'email' => 'tomas@example.com',
+            'store_name' => 'Reyes Glassworks',
+            'subdomain' => 'reyes-glassworks',
+            'website' => 'https://example.com/reyes',
+            'message' => 'Blown glass vessels and a few large installation pieces. All originals.',
+        ]);
     }
 
     protected function seedCatalogue(Store $store, User $customer): void

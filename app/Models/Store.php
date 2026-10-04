@@ -20,6 +20,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $name
  * @property string $slug
+ * @property string|null $domain
  * @property string|null $description
  * @property StoreStatus $status
  * @property string $currency
@@ -29,7 +30,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  */
-#[Fillable(['name', 'slug', 'description', 'status', 'currency', 'contact_email', 'settings'])]
+#[Fillable(['name', 'slug', 'domain', 'description', 'status', 'currency', 'contact_email', 'settings'])]
 class Store extends Model
 {
     /** @use HasFactory<StoreFactory> */
@@ -116,6 +117,43 @@ class Store extends Model
     public function images(): MorphMany
     {
         return $this->morphMany(Image::class, 'imageable')->orderBy('position');
+    }
+
+    /**
+     * Find the store a request host belongs to: a subdomain of the root
+     * domain by slug, any other host by custom domain.
+     */
+    public static function findForHost(string $host): ?self
+    {
+        $host = strtolower(explode(':', $host)[0]);
+        $suffix = '.'.strtolower(config('tenancy.root_domain'));
+
+        if (! str_ends_with($host, $suffix)) {
+            return static::query()->where('domain', $host)->first();
+        }
+
+        $subdomain = substr($host, 0, -strlen($suffix));
+
+        if (str_contains($subdomain, '.') || in_array($subdomain, config('tenancy.reserved_subdomains'), true)) {
+            return null;
+        }
+
+        return static::query()->where('slug', $subdomain)->first();
+    }
+
+    /**
+     * Absolute URL on the store's own host, for links built outside a store
+     * request (mail, queued jobs, admin). Scheme and port follow APP_URL.
+     */
+    public function url(string $path = '/'): string
+    {
+        $appUrl = (string) config('app.url');
+        $scheme = parse_url($appUrl, PHP_URL_SCHEME) ?: 'https';
+        $port = parse_url($appUrl, PHP_URL_PORT);
+
+        $host = $this->domain ?? $this->slug.'.'.config('tenancy.root_domain');
+
+        return $scheme.'://'.$host.($port ? ":{$port}" : '').'/'.ltrim($path, '/');
     }
 
     public function isActive(): bool
